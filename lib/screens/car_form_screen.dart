@@ -15,22 +15,23 @@ class CarFormScreen extends StatefulWidget {
 class _CarFormScreenState extends State<CarFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _apiService = ApiService(); // Instância do ApiService
-  
+
   late TextEditingController _modelController;
   late TextEditingController _brandController;
   late TextEditingController _yearController;
   late TextEditingController _priceController;
   late TextEditingController _quantityController;
 
-  @override
+    @override
   void initState() {
     super.initState();
-    _modelController = TextEditingController(text: widget.car?.model);
-    _brandController = TextEditingController(text: widget.car?.brand);
-    _yearController = TextEditingController(text: widget.car?.year.toString());
-    _priceController = TextEditingController(text: widget.car?.price.toString());
-    _quantityController = TextEditingController(text: widget.car?.quantity.toString());
+    _modelController = TextEditingController(text: widget.car?.model ?? '');
+    _brandController = TextEditingController(text: widget.car?.brand ?? '');
+    _yearController = TextEditingController(text: widget.car != null ? widget.car!.year.toString() : '');
+    _priceController = TextEditingController(text: widget.car != null ? widget.car!.price.toString() : '');
+    _quantityController = TextEditingController(text: widget.car != null ? widget.car!.quantity.toString() : '');
   }
+
 
   @override
   void dispose() {

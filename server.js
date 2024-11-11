@@ -8,23 +8,21 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/storageDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('Conectado ao MongoDB'))
+mongoose.connect('mongodb://localhost:27017/storageDB')
+  .then(() => console.log('Conectado ao MongoDB'))
   .catch(err => console.error('Erro ao conectar ao MongoDB:', err));
 
 const categorySchema = new mongoose.Schema({
   name: { type: String, required: true }
 });
 
-const carschema = new mongoose.Schema({
+const carSchema = new mongoose.Schema({
   name: { type: String, required: true },
   categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true }
 });
 
 const Category = mongoose.model('Category', categorySchema);
-const cars = mongoose.model('cars', carschema);
+const Car = mongoose.model('Car', carSchema);
 
 app.get('/categories', async (req, res) => {
   try {
@@ -63,7 +61,7 @@ app.put('/categories/:id', async (req, res) => {
 app.delete('/categories/:id', async (req, res) => {
   try {
     await Category.findByIdAndDelete(req.params.id);
-    await cars.deleteMany({ categoryId: req.params.id });
+    await Car.deleteMany({ categoryId: req.params.id });
     res.status(204).send();
   } catch (err) {
     res.status(400).send('Erro ao excluir categoria');
@@ -72,7 +70,7 @@ app.delete('/categories/:id', async (req, res) => {
 
 app.get('/cars', async (req, res) => {
   try {
-    const cars = await cars.find().populate('categoryId');
+    const cars = await Car.find().populate('categoryId');
     res.json(cars);
   } catch (err) {
     console.error(err);
@@ -82,11 +80,11 @@ app.get('/cars', async (req, res) => {
 
 app.post('/cars', async (req, res) => {
   try {
-    const cars = new cars(req.body);
-    await cars.save();
-    res.status(201).json(cars);
+    const car = new Car(req.body);
+    await car.save();
+    res.status(201).json(car);
   } catch (err) {
-    res.status(400).send('Erro ao criar cars');
+    res.status(400).send('Erro ao criar carro');
   }
 });
 
@@ -94,23 +92,23 @@ app.put('/cars/:id', async (req, res) => {
   console.log('Requisição PUT recebida para o ID:', req.params.id);
   console.log('Corpo da Requisição:', req.body);
   try {
-    const cars = await cars.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!cars) {
-      return res.status(404).send('cars não encontrado');
+    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!car) {
+      return res.status(404).send('Carro não encontrado');
     }
-    res.json(cars);
+    res.json(car);
   } catch (err) {
     console.error(err);
-    res.status(400).send('Erro ao atualizar cars');
+    res.status(400).send('Erro ao atualizar carro');
   }
 });
 
 app.delete('/cars/:id', async (req, res) => {
   try {
-    await cars.findByIdAndDelete(req.params.id);
+    await Car.findByIdAndDelete(req.params.id);
     res.status(204).send();
   } catch (err) {
-    res.status(400).send('Erro ao excluir cars');
+    res.status(400).send('Erro ao excluir carro');
   }
 });
 

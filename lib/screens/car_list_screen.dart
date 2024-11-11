@@ -4,13 +4,13 @@ import 'package:projeto_estoque/models/car.dart';
 class CarListScreen extends StatelessWidget {
   final List<Car> cars;
 
-  CarListScreen({required this.cars});
+  const CarListScreen({super.key, required this.cars});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista de Carros'),
+        title: const Text('Lista de Carros'),
       ),
       body: ListView.builder(
         itemCount: cars.length,
