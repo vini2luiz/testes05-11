@@ -11,9 +11,12 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
+      id: json['id'] as String? ??
+          '', // Define um valor padrão se 'id' for null
+      name: json['name'] as String? ??
+          '', // Define um valor padrão se 'name' for null
+      description: json['description'] as String? ??
+          '', // Define um valor padrão se 'description' for null
     );
   }
 

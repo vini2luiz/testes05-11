@@ -1,7 +1,7 @@
 // lib/screens/car_form_screen.dart
 import 'package:flutter/material.dart';
-import '../models/car.dart';  // Importa a classe Car
-import '../services/api_service.dart';  // Importa o serviço ApiService
+import '../models/car.dart'; // Importa a classe Car
+import '../services/api_service.dart'; // Importa o serviço ApiService
 
 class CarFormScreen extends StatefulWidget {
   final Car? car;
@@ -22,16 +22,18 @@ class _CarFormScreenState extends State<CarFormScreen> {
   late TextEditingController _priceController;
   late TextEditingController _quantityController;
 
-    @override
+  @override
   void initState() {
     super.initState();
     _modelController = TextEditingController(text: widget.car?.model ?? '');
     _brandController = TextEditingController(text: widget.car?.brand ?? '');
-    _yearController = TextEditingController(text: widget.car != null ? widget.car!.year.toString() : '');
-    _priceController = TextEditingController(text: widget.car != null ? widget.car!.price.toString() : '');
-    _quantityController = TextEditingController(text: widget.car != null ? widget.car!.quantity.toString() : '');
+    _yearController = TextEditingController(
+        text: widget.car != null ? widget.car!.year.toString() : '');
+    _priceController = TextEditingController(
+        text: widget.car != null ? widget.car!.price.toString() : '');
+    _quantityController = TextEditingController(
+        text: widget.car != null ? widget.car!.quantity.toString() : '');
   }
-
 
   @override
   void dispose() {
