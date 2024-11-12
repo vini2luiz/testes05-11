@@ -52,7 +52,7 @@ class MainDrawer extends StatelessWidget {
             leading: const Icon(Icons.directions_car),
             title: const Text('Estoque de Carros'),
             onTap: () {
-              // Criando uma lista de carros fictícia para passar para a tela de estoque de carros
+              // Criando uma lista 
               final List<Car> cars = [
                 Car(id: '1', model: 'Civic', brand: 'Honda', year: 2018, price: 85000, quantity: 5),
                 Car(id: '2', model: 'Gol', brand: 'Volkswagen', year: 2010, price: 20000, quantity: 3),
@@ -80,3 +80,4 @@ class MainDrawer extends StatelessWidget {
     );
   }
 }
+ 

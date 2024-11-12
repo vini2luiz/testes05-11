@@ -93,6 +93,32 @@ app.post('/cars', async (req, res) => {
   }
 });
 
+// Rota para atualizar carro
+app.put('/cars/:id', async (req, res) => {
+  try {
+    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!car) {
+      return res.status(404).send('Carro não encontrado');
+    }
+    res.json(car);
+  } catch (err) {
+    res.status(400).send('Erro ao atualizar carro');
+  }
+});
+
+// Rota para excluir carro
+app.delete('/cars/:id', async (req, res) => {
+  try {
+    const car = await Car.findByIdAndDelete(req.params.id);
+    if (!car) {
+      return res.status(404).send('Carro não encontrado');
+    }
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send('Erro ao excluir carro');
+  }
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
