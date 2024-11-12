@@ -72,11 +72,70 @@ class _CarFormScreenState extends State<CarFormScreen> {
     return null;
   }
 
+  Future<void> _saveCar() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final car = Car(
+        id: widget.car?.id, // mantém o ID para update
+        model: _modelController.text,
+        brand: _brandController.text,
+        year: int.tryParse(_yearController.text) ?? 0,
+        price: double.tryParse(_priceController.text) ?? 0.0,
+        quantity: int.tryParse(_quantityController.text) ?? 0,
+      );
+
+      if (widget.car == null) {
+        // Cria um novo carro se não existir
+        await _apiService.createCar(car);
+      } else {
+        // Atualiza o carro existente
+        await _apiService.updateCar(car);
+      }
+
+      // Volta para a tela anterior após salvar
+      Navigator.pop(context, true);
+    }
+  }
+
+  Future<void> _deleteCar() async {
+    if (widget.car != null && widget.car!.id != null) {
+      await _apiService.deleteCar(widget.car!.id!);
+      Navigator.pop(context, true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formulário de Carro'),
+        actions: [
+          if (widget.car != null)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () async {
+                final confirm = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Confirmar Exclusão'),
+                    content: const Text('Deseja excluir este carro?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Excluir'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirm == true) {
+                  await _deleteCar();
+                }
+              },
+            ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -112,20 +171,7 @@ class _CarFormScreenState extends State<CarFormScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      final car = Car(
-                        model: _modelController.text,
-                        brand: _brandController.text,
-                        year: int.tryParse(_yearController.text) ?? 0,
-                        price: double.tryParse(_priceController.text) ?? 0.0,
-                        quantity: int.tryParse(_quantityController.text) ?? 0,
-                      );
-
-                      // Chama o método para salvar o carro via API
-                      _apiService.saveCar(car);
-                    }
-                  },
+                  onPressed: _saveCar,
                   child: const Text('Salvar'),
                 ),
               ),

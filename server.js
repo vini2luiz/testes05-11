@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -24,6 +25,7 @@ const carSchema = new mongoose.Schema({
 const Category = mongoose.model('Category', categorySchema);
 const Car = mongoose.model('Car', carSchema);
 
+// Rota para listar categorias
 app.get('/categories', async (req, res) => {
   try {
     const categories = await Category.find();
@@ -33,6 +35,7 @@ app.get('/categories', async (req, res) => {
   }
 });
 
+// Rota para criar categoria
 app.post('/categories', async (req, res) => {
   try {
     const category = new Category(req.body);
@@ -43,9 +46,8 @@ app.post('/categories', async (req, res) => {
   }
 });
 
+// Rota para atualizar categoria
 app.put('/categories/:id', async (req, res) => {
-  console.log('Requisição PUT recebida para o ID:', req.params.id);
-  console.log('Corpo da Requisição:', req.body);
   try {
     const category = await Category.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!category) {
@@ -53,31 +55,34 @@ app.put('/categories/:id', async (req, res) => {
     }
     res.json(category);
   } catch (err) {
-    console.error(err);
     res.status(400).send('Erro ao atualizar categoria');
   }
 });
 
+// Rota para excluir categoria
 app.delete('/categories/:id', async (req, res) => {
   try {
-    await Category.findByIdAndDelete(req.params.id);
-    await Car.deleteMany({ categoryId: req.params.id });
+    const category = await Category.findByIdAndDelete(req.params.id);
+    if (!category) {
+      return res.status(404).send('Categoria não encontrada');
+    }
     res.status(204).send();
   } catch (err) {
-    res.status(400).send('Erro ao excluir categoria');
+    res.status(500).send('Erro ao excluir categoria');
   }
 });
 
+// Rota para listar carros
 app.get('/cars', async (req, res) => {
   try {
     const cars = await Car.find().populate('categoryId');
     res.json(cars);
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao buscar itens');
+    res.status(500).send('Erro ao buscar carros');
   }
 });
 
+// Rota para criar carro
 app.post('/cars', async (req, res) => {
   try {
     const car = new Car(req.body);
@@ -88,30 +93,6 @@ app.post('/cars', async (req, res) => {
   }
 });
 
-app.put('/cars/:id', async (req, res) => {
-  console.log('Requisição PUT recebida para o ID:', req.params.id);
-  console.log('Corpo da Requisição:', req.body);
-  try {
-    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!car) {
-      return res.status(404).send('Carro não encontrado');
-    }
-    res.json(car);
-  } catch (err) {
-    console.error(err);
-    res.status(400).send('Erro ao atualizar carro');
-  }
-});
-
-app.delete('/cars/:id', async (req, res) => {
-  try {
-    await Car.findByIdAndDelete(req.params.id);
-    res.status(204).send();
-  } catch (err) {
-    res.status(400).send('Erro ao excluir carro');
-  }
-});
-
 app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+  console.log(`Servidor rodando na porta ${port}`);
 });

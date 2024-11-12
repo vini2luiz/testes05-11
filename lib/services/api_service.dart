@@ -1,3 +1,4 @@
+// api_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/car.dart';
@@ -52,15 +53,10 @@ class ApiService {
   Future<List<Category>> getCategories() async {
     final response = await http.get(Uri.parse('$baseUrl/categories'));
     if (response.statusCode == 200) {
-
       List jsonResponse = json.decode(response.body);
-      return jsonResponse
-          .map((category) => Category.fromJson(category))
-          .toList();
+      return jsonResponse.map((category) => Category.fromJson(category)).toList();
     } else {
       throw Exception('Failed to load categories');
     }
   }
-
-  void saveCar(Car car) {}
 }
