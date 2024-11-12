@@ -17,11 +17,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   test: ^1.24.0
-
-flutter:
-  fonts:
-    - family: NotoSans
-      fonts:
-        - asset: assets/fonts/NotoSans-Regular.ttf
-        - asset: assets/fonts/NotoSans-VariableFont_wdth,wght.ttf
-        - asset: assets/fonts/NotoSans-Italic-VariableFont_wdth,wght.ttf
